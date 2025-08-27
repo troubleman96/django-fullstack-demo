@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Django Learning Project{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="container">
+        <!-- Side Navigation -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Django App</h2>
+            </div>
+            <div class="nav-menu">
+                <a href="{% url 'main:home' %}" class="nav-item {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                    🏠 Home
+                </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'main:profile' %}" class="nav-item {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+                    👤 Profile
+                </a>
+                <a href="{% url 'main:settings' %}" class="nav-item {% if request.resolver_match.url_name == 'settings' %}active{% endif %}">
+                    ⚙️ Settings
+                </a>
+                <a href="{% url 'main:projects' %}" class="nav-item {% if request.resolver_match.url_name == 'projects' %}active{% endif %}">
+                    📂 Projects
+                </a>
+                {% endif %}
+                <a href="{% url 'main:about' %}" class="nav-item {% if request.resolver_match.url_name == 'about' %}active{% endif %}">
+                    ℹ️ About
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Header -->
+            <div class="header">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰ Menu</button>
+                <div class="user-info">
+                    {% if user.is_authenticated %}
+                        <span>Welcome, {{ user.username }}!</span>
+                        <a href="{% url 'main:logout' %}" class="btn logout-btn">Logout</a>
+                    {% else %}
+                        <span>Not logged in</span>
+                        <a href="{% url 'main:login' %}" class="btn btn-secondary">Login</a>
+                        <a href="{% url 'main:signup' %}" class="btn btn-primary">Sign Up</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="content-section">
+                {% block content %}
+                <!-- Child templates will override this block -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Framework -->
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                    <button type="button" class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

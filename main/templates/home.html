@@ -1,0 +1,45 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Home - Django Learning Project{% endblock %}
+
+{% block content %}
+<div class="welcome-section">
+    <h1>Welcome to Django Learning Project</h1>
+    <p>A full-stack web application built with Django framework</p>
+    
+    {% if user.is_authenticated %}
+        <div class="user-welcome">
+            <h2>Hello, {{ user.get_full_name|default:user.username }}!</h2>
+            <p>Last login: {{ user.last_login|date:"F d, Y at g:i A" }}</p>
+        </div>
+    {% else %}
+        <div class="guest-welcome">
+            <h2>Ready to get started?</h2>
+            <p>Create an account or login to access all features.</p>
+            <div style="margin-top: 20px;">
+                <a href="{% url 'main:signup' %}" class="btn btn-primary">Get Started</a>
+                <a href="{% url 'main:login' %}" class="btn btn-secondary">I have an account</a>
+            </div>
+        </div>
+    {% endif %}
+    
+    <div class="card-grid">
+        <div class="card">
+            <h3>🔐 Authentication</h3>
+            <p>User registration, login, and session management with Django's built-in auth system.</p>
+        </div>
+        <div class="card">
+            <h3>🎨 Templates</h3>
+            <p>Dynamic HTML templates with Django template language for rendering data.</p>
+        </div>
+        <div class="card">
+            <h3>🗄️ Models</h3>
+            <p>Database models using Django ORM for data persistence and relationships.</p>
+        </div>
+        <div class="card">
+            <h3>🛠️ Views & URLs</h3>
+            <p>Function and class-based views with URL routing for handling requests.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
