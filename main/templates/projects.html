@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Projects - Django Learning Project{% endblock %}
+
+{% block content %}
+<div class="projects-container">
+    <div class="projects-header">
+        <h2>My Projects</h2>
+        <a href="{% url 'main:create_project' %}" class="btn btn-primary">+ New Project</a>
+    </div>
+    
+    {% if projects %}
+        <div class="card-grid">
+            {% for project in projects %}
+            <div class="card project-card">
+                <h3>{{ project.title }}</h3>
+                <p>{{ project.description|truncatewords:20 }}</p>
+                <div class="project-meta">
+                    <span class="project-date">Created: {{ project.created_at|date:"M d, Y" }}</span>
+                    <span class="project-status">Status: {{ project.get_status_display }}</span>
+                </div>
+                <div class="project-actions">
+                    <a href="{% url 'main:project_detail' project.pk %}" class="btn btn-secondary">View</a>
+                    <a href="{% url 'main:project_edit' project.pk %}" class="btn btn-primary">Edit</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>No projects yet</h3>
+            <p>Create your first project to get started!</p>
+            <a href="{% url 'main:create_project' %}" class="btn btn-primary">Create Project</a>
+        </div>
+    {% endif %}
+    
+    <!-- Pagination -->
+    {% if projects.has_other_pages %}
+        <div class="pagination">
+            {% if projects.has_previous %}
+                <a href="?page={{ projects.previous_page_number }}" class="btn btn-secondary">Previous</a>
+            {% endif %}
+            
+            <span class="page-info">
+                Page {{ projects.number }} of {{ projects.paginator.num_pages }}
+            </span>
+            
+            {% if projects.has_next %}
+                <a href="?page={{ projects.next_page_number }}" class="btn btn-secondary">Next</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
